@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal AI Teacher</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Main container -->
+    <div class="container">
+        <!-- Header section -->
+        <header class="header">
+            <h1>Personal AI Teacher</h1>
+            <p class="subtitle">Learn anything, step by step</p>
+        </header>
+
+        <!-- Chat container for displaying messages -->
+        <div class="chat-container" id="chatContainer">
+            <!-- Messages will be dynamically added here -->
+            <div class="message ai-message">
+                <p>Hello! I'm your personal AI teacher. Ask me anything you'd like to learn about, and I'll explain it step by step with examples. What would you like to know?</p>
+            </div>
+        </div>
+
+        <!-- Input section -->
+        <div class="input-section">
+            <div class="input-wrapper">
+                <!-- Text input field for user messages -->
+                <input 
+                    type="text" 
+                    id="userInput" 
+                    class="input-box" 
+                    placeholder="Ask me anything..."
+                    aria-label="User input for AI teacher"
+                >
+                
+                <!-- Send button -->
+                <button 
+                    id="sendBtn" 
+                    class="send-btn" 
+                    aria-label="Send message to AI teacher"
+                >
+                    Send
+                </button>
+            </div>
+            
+            <!-- Loading indicator (hidden by default) -->
+            <div class="loading-indicator" id="loadingIndicator">
+                <span class="loader"></span>
+                <p>AI is thinking...</p>
+            </div>
+
+            <!-- Error message display (hidden by default) -->
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by Google Gemini 1.5 Flash | Remember to add your API key</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>

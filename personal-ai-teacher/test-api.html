@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Gemini API Auto Model Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  background:#0f0f0f;
+  color:#e0e0e0;
+  font-family:Arial, sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+.box {
+  background:#1a1a1a;
+  border:2px solid #667eea;
+  padding:25px;
+  border-radius:10px;
+  width:100%;
+  max-width:600px;
+}
+button {
+  width:100%;
+  padding:14px;
+  background:#667eea;
+  border:none;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  border-radius:8px;
+  cursor:pointer;
+}
+pre {
+  background:#0f0f0f;
+  padding:10px;
+  margin-top:15px;
+  border-radius:6px;
+  font-size:13px;
+  overflow:auto;
+}
+.success { color:#4caf50; }
+.error { color:#ff6b6b; }
+</style>
+</head>
+
+<body>
+<div class="box">
+  <h2>🧪 Gemini API – Auto Model Detection</h2>
+  <p>This will detect a working Gemini model for YOUR project.</p>
+
+  <button onclick="runTest()">Run Test</button>
+
+  <pre id="output"></pre>
+</div>
+
+<script>
+// 🔴 PASTE YOUR API KEY HERE
+const API_KEY = "AIzaSyBq_-z2MkS80zuwXgGzth8zv7hqO_4bofY";
+
+// OFFICIAL endpoint for REST + API key
+const BASE = "https://generativelanguage.googleapis.com/v1beta";
+
+const out = document.getElementById("output");
+
+async function runTest() {
+  out.textContent = "Listing available models...\n";
+
+  try {
+    // 1️⃣ LIST MODELS
+    const listRes = await fetch(`${BASE}/models?key=${API_KEY}`);
+    const listData = await listRes.json();
+
+    if (!listRes.ok) {
+      out.textContent = "❌ Failed to list models\n" + JSON.stringify(listData, null, 2);
+      return;
+    }
+
+    // Find model that supports generateContent
+    const model = listData.models.find(m =>
+      m.supportedGenerationMethods?.includes("generateContent")
+    );
+
+    if (!model) {
+      out.textContent = "❌ No model supports generateContent";
+      return;
+    }
+
+    out.textContent += `✅ Found model: ${model.name}\n\nCalling generateContent...\n`;
+
+    // 2️⃣ CALL GENERATE CONTENT
+    const genRes = await fetch(
+      `${BASE}/${model.name}:generateContent?key=${API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{ text: "Say exactly: Gemini API is working successfully" }]
+          }]
+        })
+      }
+    );
+
+    const genData = await genRes.json();
+
+    if (!genRes.ok) {
+      out.textContent += "❌ generateContent failed\n" +
+        JSON.stringify(genData, null, 2);
+      return;
+    }
+
+    out.textContent +=
+      "\n✅ SUCCESS\n\n" +
+      genData.candidates[0].content.parts[0].text;
+
+  } catch (err) {
+    out.textContent = "❌ JS Error\n" + err.message;
+  }
+}
+</script>
+</body>
+</html>
